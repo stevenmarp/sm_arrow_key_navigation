@@ -22,6 +22,7 @@ Features:
     'depends': ['web'],
     'assets': {
         'web.assets_backend': [
+            'sm_arrow_key_navigation/static/src/css/arrow_key_navigation.css',
             'sm_arrow_key_navigation/static/src/js/arrow_key_navigation.js',
         ],
     },

@@ -52,7 +52,16 @@ patch(ListRenderer.prototype, {
         list.leaveEditMode({ validate: true }).then((canProceed) => {
             if (canProceed) {
                 this.cellToFocus = { column, record: futureRecord };
-                list.enterEditMode(futureRecord);
+                list.enterEditMode(futureRecord).then(() => {
+                    // Wait for OWL patch cycle, then flash the focused cell
+                    requestAnimationFrame(() => {
+                        const activeEl = document.activeElement;
+                        if (activeEl) {
+                            const td = activeEl.closest("td");
+                            this._smFlashHighlight(td);
+                        }
+                    });
+                });
             }
         });
 
@@ -119,9 +128,24 @@ patch(ListRenderer.prototype, {
 
         if (toFocus) {
             this.focus(toFocus);
+            this._smFlashHighlight(toFocus);
             return true;
         }
 
         return false;
+    },
+
+    /**
+     * Briefly flash a blue highlight on a cell to give visual feedback.
+     */
+    _smFlashHighlight(td) {
+        if (!td) return;
+        td.classList.remove("sm-arrow-nav-highlight");
+        // Force reflow so re-adding the class restarts the animation
+        void td.offsetWidth;
+        td.classList.add("sm-arrow-nav-highlight");
+        td.addEventListener("animationend", () => {
+            td.classList.remove("sm-arrow-nav-highlight");
+        }, { once: true });
     },
 });

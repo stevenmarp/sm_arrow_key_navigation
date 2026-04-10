@@ -1,0 +1,14 @@
+/* Arrow Key Navigation — cell highlight feedback */
+
+@keyframes sm-arrow-nav-flash {
+    0% {
+        background-color: rgba(52, 152, 219, 0.35);
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+.o_list_table td.sm-arrow-nav-highlight {
+    animation: sm-arrow-nav-flash 0.5s ease-out;
+}
